@@ -8,6 +8,8 @@ import { HeroImage } from "./HeroImage";
 import { useHomeFetch } from "../hooks/useHomeFetch";
 //Image
 import NoImage from "../images/no_image.jpg";
+import { Grid } from "./Grid";
+import { Thumb } from "./Thumb";
 
 export const Home = () => {
   const { state, loading, error } = useHomeFetch();
@@ -22,6 +24,23 @@ export const Home = () => {
           text={state.results[2].overview}
         />
       )}
+      <Grid header={"Popular Movies"}>
+        {state.results.map((movie) => (
+          <Thumb
+            key={movie.id}
+            clickable
+            image={
+              movie.poster_path
+                ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+                : NoImage
+            }
+            movieId={movie.movieId}
+          >
+            {" "}
+            {movie.title}{" "}
+          </Thumb>
+        ))}
+      </Grid>
     </>
   );
 };
