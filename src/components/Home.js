@@ -13,11 +13,14 @@ import { Grid } from "./Grid";
 import { Thumb } from "./Thumb";
 import { Spinner } from "./Spinner/Spinner.styles";
 import { SearchBar } from "./SearchBar";
+import { Button } from "./Button";
 
 export const Home = () => {
-  const { state, loading, error, searchTerm, setSearchTerm } = useHomeFetch();
+  const { state, loading, error, searchTerm, setSearchTerm, setLoadingMore } = useHomeFetch();
   console.log(state);
 
+
+  if(error) return <div>Something when wrong...</div>
   return (
     <>
       {!searchTerm  && state.results[0] && (
@@ -45,7 +48,8 @@ export const Home = () => {
           </Thumb>
         ))}
       </Grid>
-      <Spinner />
+      {loading && <Spinner />}
+      {state.page < state.total_pages && !loading && (<Button text='Load More' callback={() => setLoadingMore(true)} />)}
     </>
   );
 };
