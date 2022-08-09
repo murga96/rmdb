@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../API";
+import { getSessionStorageItem } from "../helpers";
 
 const initialState = {
   page: 0,
@@ -20,11 +21,11 @@ export const useHomeFetch = () => {
       setError(false);
       setLoading(true);
       const movies = await API.fetchMovies(searchTerm, page);
-      console.log(movies)
+      console.log(movies);
       setState((prev) => ({
         ...movies,
         results:
-        page > 1 ? [...prev.results, ...movies.results] : [...movies.results],
+          page > 1 ? [...prev.results, ...movies.results] : [...movies.results],
       }));
       setLoading(false);
     } catch (error) {
@@ -33,6 +34,15 @@ export const useHomeFetch = () => {
   };
 
   useEffect(() => {
+    if (!searchTerm) {
+      const sessionState = getSessionStorageItem('home-state')
+      console.log("Grabbing from session storage")
+      if(sessionState) {
+        setState(sessionState)
+        return
+      }
+    }
+    console.log("Grabbing from API")
     setState(initialState);
     fetchMovies(1, searchTerm);
   }, [searchTerm]);
@@ -42,6 +52,10 @@ export const useHomeFetch = () => {
     fetchMovies(state.page + 1, searchTerm);
     setLoadingMore(false);
   }, [loadingMore, searchTerm, state.page]);
+
+  useEffect(() => {
+    if (!searchTerm) sessionStorage.setItem("home-state", JSON.stringify(state));
+  }, [searchTerm, state]);
 
   return { state, loading, error, searchTerm, setSearchTerm, setLoadingMore };
 };

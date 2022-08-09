@@ -13,3 +13,8 @@ export const convertMoney = money => {
   });
   return formatter.format(money);
 };
+
+export const getSessionStorageItem = (itemName) => {
+    const item = sessionStorage.getItem(itemName)
+    return item && JSON.parse(item)
+}
