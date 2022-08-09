@@ -21,7 +21,6 @@ export const useHomeFetch = () => {
       setError(false);
       setLoading(true);
       const movies = await API.fetchMovies(searchTerm, page);
-      console.log(movies);
       setState((prev) => ({
         ...movies,
         results:
@@ -33,6 +32,7 @@ export const useHomeFetch = () => {
     }
   };
 
+  //Initial and search
   useEffect(() => {
     if (!searchTerm) {
       const sessionState = getSessionStorageItem('home-state')
@@ -47,6 +47,7 @@ export const useHomeFetch = () => {
     fetchMovies(1, searchTerm);
   }, [searchTerm]);
 
+  //Loading more
   useEffect(() => {
     if (!loadingMore) return;
     fetchMovies(state.page + 1, searchTerm);

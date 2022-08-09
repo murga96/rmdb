@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import API from "../API";
+import { getSessionStorageItem } from "../helpers";
 
-export const useMovieFetch = ( movieId ) => {
+export const useMovieFetch = (movieId) => {
   const [state, setState] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  //Fetching individual movie
   useEffect(() => {
     const fetchMovie = async () => {
       try {
@@ -29,9 +31,20 @@ export const useMovieFetch = ( movieId ) => {
         setError(true);
       }
     };
-    fetchMovie()
+    const movieState = getSessionStorageItem(movieId);
+    if (movieState) {
+      setState(movieState);
+      setLoading(false);
+      return;
+    }
+
+    fetchMovie();
   }, [movieId]);
-  console.log(state);
+
+  //Wrtiting to session storage
+  useEffect(() => {
+    sessionStorage.setItem(movieId, JSON.stringify(state));
+  }, [movieId, state]);
 
   return { state, loading, error };
 };

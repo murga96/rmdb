@@ -32,17 +32,21 @@ export const Movie = () => {
           revenue={movie.revenue}
         />
       )}
-      <Grid header='Actors' >
-          {movie.actors.map(actor => (
+      {Object.keys(movie).length > 0 && (
+        <Grid header="Actors">
+          {movie.actors.map((actor) => (
             <Actor
               name={actor.name}
               character={actor.character}
               imageUrl={
-                actor.profile_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${actor.profile_path}` : NoImage
+                actor.profile_path
+                  ? `${IMAGE_BASE_URL}${POSTER_SIZE}${actor.profile_path}`
+                  : NoImage
               }
-             />
+            />
           ))}
         </Grid>
+      )}
     </>
   );
 };
